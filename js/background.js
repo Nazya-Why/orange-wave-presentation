@@ -45,10 +45,10 @@ vec4 ribbon(vec2 p, vec4 A, vec4 B, vec4 C, inout float halo) {
   float f1 = B.y, f2 = B.y * 1.87;
   float yc = B.x * sin(x * f1 + t) + B.x * .32 * sin(x * f2 - t * 1.4 + 1.7) + C.y * x * x;
   float dy = B.x * f1 * cos(x * f1 + t) + B.x * .32 * f2 * cos(x * f2 - t * 1.4 + 1.7) + 2. * C.y * x;
-  float th = x * B.z + t * .8;
+  float th = x * B.z + t * .5;                                  // повільніший закрут у часі
   float ct = cos(th);
   float tap = smoothstep(C.z, C.z - 1.2, x);                 // хвіст, що сходить нанівець
-  float hw = B.w * (.1 + .9 * abs(ct)) * tap + 1e-4;          // ребром — вужча
+  float hw = B.w * (.2 + .8 * abs(ct)) * tap + 1e-4;          // ребром — вужча, але не в нитку
   float d = (q.y - yc) / sqrt(1. + dy * dy);
   float e = abs(d) / hw;
   float aa = PX / A.w / hw;
@@ -61,7 +61,7 @@ vec4 ribbon(vec2 p, vec4 A, vec4 B, vec4 C, inout float halo) {
   float fr = pow(1. - abs(cos(ang)), 2.);                     // під кутом — насиченіше
   vec3 col = mix(cLite, cMid, .4 + .6 * fr);
   col = mix(col, cDeep, fr * fr * .75);
-  col = mix(col, cDeep, step(ct, 0.) * .2);                   // зворотний бік трохи темніший
+  col = mix(col, cDeep, smoothstep(.35, -.35, ct) * .16);     // зворотний бік темнішає поступово
   float pl = pow(.5 + .5 * sin(x * 1.3 - t * 2.4), 10.);      // світло, що біжить уздовж
   col = mix(col, cLite, pl * .45 * (1. - fr));
   col += vec3(1.) * pow(max(0., sin(ang + .9)), 34.) * .6;    // відблиск
@@ -174,8 +174,9 @@ void main() {
   ];
 
   const cur = WAVES[0].map(r => r.slice());
+  const vel = WAVES[0].map(r => r.map(() => 0));   // швидкості для пружини
   let target = WAVES[0];
-  let kick = 0;
+  let kick = 0, kickVel = 0, kickTo = 0;            // поштовх теж плавно наростає й спадає
   const SPEED = [.34, .46, .26];
   const phase = [0, 0, 0];
 
@@ -184,13 +185,15 @@ void main() {
     const i = Math.max(0, slides.indexOf(document.querySelector('.slide.is-active')));
     target = WAVES[i % WAVES.length].map((r, k) => {
       const t = r.slice();
-      // кут — найкоротшим шляхом
-      t[0] += Math.PI * 2 * Math.round((cur[k][0] - t[0]) / (Math.PI * 2));
+      // кут — найкоротшим шляхом. Стрічка без хвоста (кінець 9) виглядає однаково,
+      // якщо її повернути на пів оберту, тож для неї досить обертатися в межах ±90°
+      const period = t[10] >= 9 && cur[k][10] >= 9 ? Math.PI : Math.PI * 2;
+      t[0] += period * Math.round((cur[k][0] - t[0]) / period);
       return t;
     });
   };
-  api.kick = (s = 1) => { kick = Math.max(kick, s); };
-  addEventListener('pointerdown', () => api.kick(.5));
+  api.kick = (s = 1) => { kickTo = Math.max(kickTo, s); };
+  addEventListener('pointerdown', () => api.kick(.35));
 
   /* ───────── курсор ───────── */
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -231,7 +234,20 @@ void main() {
       if (sampled >= 120) { if (slow > 70) { level++; resize(); } sampled = 0; slow = 0; }
     }
 
-    kick += (0 - kick) * (1 - Math.exp(-dt * 1.8));
+    // пружини з критичним загасанням: рух м'яко розганяється й м'яко сідає, без перельоту.
+    // Рахуємо дрібними кроками, щоб на повільних кадрах не тремтіло.
+    const SUB = Math.max(1, Math.ceil(dt / .016)), h = dt / SUB;
+    const KS = 6.5, DS = 2 * Math.sqrt(KS);           // хвиля сідає за ~1,5 с
+    const KK = 9, DK = 2 * Math.sqrt(KK);             // поштовх
+    for (let s = 0; s < SUB; s++) {
+      kickTo += (0 - kickTo) * (1 - Math.exp(-h * 2.4));
+      kickVel += ((kickTo - kick) * KK - kickVel * DK) * h; kick += kickVel * h;
+      for (let i = 0; i < 3; i++) {
+        const c = cur[i], v = vel[i], tg = target[i];
+        for (let j = 0; j < c.length; j++) { v[j] += ((tg[j] - c[j]) * KS - v[j] * DS) * h; c[j] += v[j] * h; }
+      }
+    }
+    const kp = Math.max(0, kick);
     const k = 1 - Math.exp(-dt * 2.1);
     const km = 1 - Math.exp(-dt * 2.5);
     mouse.x += (mouse.tx - mouse.x) * km;
@@ -243,18 +259,17 @@ void main() {
     }
 
     for (let i = 0; i < 3; i++) {
-      const c = cur[i], tg = target[i];
-      for (let j = 0; j < c.length; j++) c[j] += (tg[j] - c[j]) * k;
-      phase[i] += dt * rate * SPEED[i] * (1 + 2.6 * kick);
+      const c = cur[i];
+      phase[i] += dt * rate * SPEED[i] * (1 + 1.2 * kp);
       const o = i * 12, depth = 1 + i * .6;
       const sway = Math.sin(time * .17 + i * 2.1) * .05;      // уся хвиля повільно гойдається
       data[o] = c[0] + sway * .4;
       data[o + 1] = c[1] + mouse.x * .035 * depth;
       data[o + 2] = c[2] + mouse.y * .025 * depth + sway * .3;
       data[o + 3] = c[3];
-      data[o + 4] = c[4] * (1 + .25 * kick);
+      data[o + 4] = c[4] * (1 + .1 * kp);
       data[o + 5] = c[5];
-      data[o + 6] = c[6] * (1 + .5 * kick);
+      data[o + 6] = c[6] * (1 + .15 * kp);
       data[o + 7] = c[7];
       data[o + 8] = phase[i] + c[8];
       data[o + 9] = c[9];
