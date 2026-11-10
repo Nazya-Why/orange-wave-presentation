@@ -4,14 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fffcf8">
-<title>Презентація — білий × оранж</title>
-<meta name="description" content="Дизайн презентації: білий фон, оранжева рідина у WebGL, Liquid Glass, типографіка в стилі Apple.">
+<title>ЛР № 7 — Атаки на JWT-токени</title>
+<meta name="description" content="Лабораторна робота № 7 з курсу «Безпека вебдодатків»: обхід автентифікації на основі JWT (PortSwigger).">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23fff'/%3E%3Ccircle cx='16' cy='16' r='8' fill='%23ff6a1a'/%3E%3C/svg%3E">
 <link rel="preload" href="fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/inter-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/cormorant-italic-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/fonts.css?v=10">
-<link rel="stylesheet" href="css/style.css?v=10">
+<link rel="stylesheet" href="css/fonts.css?v=11">
+<link rel="stylesheet" href="css/style.css?v=11">
+<link rel="stylesheet" href="css/report.css?v=11">
 </head>
 <body data-theme="light">
 
@@ -19,288 +20,257 @@
 <div class="grain" aria-hidden="true"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="glass-defs"></defs></svg>
 
-<!--
-  Кожен слайд:
-    data-title  назва (у підписі праворуч угорі та в змісті)
-    data-scene  як розкладені краплі на фоні: hero · wave · right · left · corners ·
-                bottom · center · float · split · drops · quote · hero-l
-    data-theme  light (білий фон, оранжеві краплі) або orange (оранжевий фон, кремові краплі)
-  .split  — заголовок, що з'являється літерами
-  .r      — текст, що з'являється каскадом (--d: затримка в секундах)
-  .rg     — скляний елемент, що з'являється каскадом
--->
 <div class="viewport">
 <div class="stage" id="stage">
 
 <main class="deck" id="deck" aria-live="polite">
-
-  <!-- 01 · Обкладинка -->
-  <section class="slide s-hero" data-title="Обкладинка" data-scene="hero" data-theme="light">
+  <section class="slide s-hero" data-title="Обкладинка" data-theme="light">
     <div class="eyebrows">
-      <span class="eyebrow r" style="--d:.05s"><i class="dot"></i>Презентація · 2026</span>
-      <span class="eyebrow bare r" style="--d:.14s">Назва компанії або курсу</span>
+      <span class="eyebrow r" style="--d:.05s"><i class="dot"></i>Безпека вебдодатків · 2026</span>
+      <span class="eyebrow bare r" style="--d:.14s">Лабораторна робота № 7</span>
     </div>
     <h1 class="display px" data-depth="10">
-      <span class="line split" style="--d:.25s">Назва</span>
-      <span class="line split" style="--d:.5s">великої <em>ідеї</em></span>
+      <span class="line split" style="--d:.25s">Атаки на</span>
+      <span class="line split" style="--d:.5s"><em>JWT</em>-токени</span>
     </h1>
-    <p class="lead r" style="--d:1.05s">Один рядок про те, що буде далі — коротко, впевнено й по суті. Цей текст можна замінити.</p>
-    <div class="hero-meta">
-      <div class="glass pill rg" style="--d:1.2s"><span>Ім'я Прізвище</span><i class="sep"></i><span class="muted">Роль · Місто</span></div>
-      <span class="hint r mono" style="--d:1.45s"><kbd>→</kbd> або <kbd>Space</kbd>, щоб почати</span>
+    <p class="lead r" style="--d:1.05s">Уразливості механізмів автентифікації на основі токенів: слабкі алгоритми підпису, підміна ключів та ін&#x27;єкції в заголовки.</p>
+    <div class="hero-grid">
+      <div class="meta-col r" style="--d:1.2s"><span class="k">Виконала</span><b>Дзяман Наталія</b><span>Студентка групи КБ-307</span></div>
+      <div class="meta-col r" style="--d:1.28s"><span class="k">Прийняв</span><b>Побережник В. О.</b><span>д. філ., ст. викл. каф. ЗІ</span></div>
+      <div class="meta-col r" style="--d:1.36s"><span class="k">Заклад</span><b>НУ «Львівська політехніка»</b><span>ІКТА · кафедра ЗІ</span></div>
+      <div class="meta-col r" style="--d:1.44s"><span class="k">Львів</span><b>2026</b></div>
     </div>
   </section>
-
-  <!-- 02 · Розділ -->
-  <section class="slide s-section" data-title="Вступ" data-scene="wave" data-theme="light">
-    <div class="center-stack">
-      <span class="kicker r" style="--d:0s">Розділ 01</span>
-      <h1 class="display">
-        <span class="line split" style="--d:.1s">Заголовок</span>
-        <span class="line split" style="--d:.34s"><em>розділу</em></span>
-      </h1>
-      <p class="lead r" style="--d:.9s">Короткий підзаголовок. Одне-два речення, що пояснюють, про що піде мова далі.</p>
+  <section class="slide s-goal" data-title="Мета та завдання" data-theme="light">
+    <div class="goal-left">
+      <span class="kicker r" style="--d:0s">Мета роботи</span>
+      <h2 class="h1"><span class="line split" style="--d:.08s">Знайти й пройти</span><span class="line split" style="--d:.3s"><em>чотири</em> вразливості</span></h2>
+      <p class="lead r" style="--d:.8s">Розібратися, як влаштовані JSON Web Tokens і через які помилки їх перевірки виникає обхід автентифікації, та проексплуатувати це в середовищі PortSwigger.</p>
+      <div class="chips">
+        <span class="chip r" style="--d:1.0s">Burp Suite</span><span class="chip r" style="--d:1.06s">JWT Editor</span><span class="chip r" style="--d:1.12s">hashcat</span><span class="chip r" style="--d:1.18s">Web Security Academy</span>
+      </div>
     </div>
+    <div class="goal-cards"><a class="glass card rg lab-card" style="--d:0.55s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-unverified-signature" target="_blank" rel="noopener">
+        <div class="card-top"><span class="num mono">01</span><span class="go-arrow">↗</span></div>
+        <div><h3>Обхід через неперевірений підпис</h3><span class="en mono">JWT authentication bypass via unverified signature</span></div>
+      </a>
+<a class="glass card rg lab-card" style="--d:0.63s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification" target="_blank" rel="noopener">
+        <div class="card-top"><span class="num mono">02</span><span class="go-arrow">↗</span></div>
+        <div><h3>Обхід через хибну перевірку підпису</h3><span class="en mono">JWT authentication bypass via flawed signature verification</span></div>
+      </a>
+<a class="glass card rg lab-card" style="--d:0.7100000000000001s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-weak-signing-key" target="_blank" rel="noopener">
+        <div class="card-top"><span class="num mono">03</span><span class="go-arrow">↗</span></div>
+        <div><h3>Обхід через слабкий ключ підпису</h3><span class="en mono">JWT authentication bypass via weak signing key</span></div>
+      </a>
+<a class="glass card rg lab-card" style="--d:0.79s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jwk-header-injection" target="_blank" rel="noopener">
+        <div class="card-top"><span class="num mono">04</span><span class="go-arrow">↗</span></div>
+        <div><h3>Обхід через ін&#x27;єкцію заголовка jwk</h3><span class="en mono">JWT authentication bypass via jwk header injection</span></div>
+      </a></div>
   </section>
-
-  <!-- 03 · Проблема -->
-  <section class="slide s-split" data-title="Проблема" data-scene="right" data-theme="light">
-    <div class="col text">
-      <span class="kicker r" style="--d:0s">02 — Проблема</span>
-      <h2 class="h1"><span class="line split" style="--d:.08s">Що зараз</span><span class="line split" style="--d:.28s">не так</span></h2>
-      <p class="lead r" style="--d:.7s">Місце для тексту. Опишіть ситуацію коротко й по суті — так, щоб читалося з останнього ряду.</p>
-      <ul class="bullets">
-        <li class="r" style="--d:.95s">Перший факт, який підтверджує проблему.</li>
-        <li class="r" style="--d:1.05s">Другий факт — цифра або спостереження.</li>
-        <li class="r" style="--d:1.15s">Третій — чому це важливо саме зараз.</li>
+  <section class="slide s-jwt" data-title="Будова JWT" data-theme="light">
+    <div class="jwt-left">
+      <span class="kicker r" style="--d:0s">Контекст</span>
+      <h2 class="h1"><span class="line split" style="--d:.08s">Будова <em>JWT</em></span></h2>
+      <p class="lead r" style="--d:.7s">Токен — це три частини в Base64url через крапку. Безпека тримається на третій: сервер мусить перевіряти підпис. Усі чотири атаки б'ють саме сюди.</p>
+      <ul class="legend-list">
+        <li class="r" style="--d:.95s"><i class="sw h"></i><b>Header</b> — алгоритм підпису (<code>alg</code>) і тип</li>
+        <li class="r" style="--d:1.03s"><i class="sw p"></i><b>Payload</b> — твердження: <code>sub</code>, <code>iss</code>, <code>exp</code></li>
+        <li class="r" style="--d:1.11s"><i class="sw s"></i><b>Signature</b> — підпис Header і Payload ключем</li>
       </ul>
     </div>
-    <div class="col visual px" data-depth="-14">
-      <figure class="glass media rg" style="--d:.45s" data-chroma>
-        <span class="media-label mono">Місце для зображення</span>
-        <span class="media-corner"></span>
-      </figure>
-    </div>
-  </section>
-
-  <!-- 04 · Рішення -->
-  <section class="slide s-cards" data-title="Рішення" data-scene="corners" data-theme="light">
-    <div class="head">
-      <div>
-        <span class="kicker r" style="--d:0s">03 — Рішення</span>
-        <h2 class="h1"><span class="line split" style="--d:.08s">Три ключові <em>ідеї</em></span></h2>
-      </div>
-      <p class="lead small r" style="--d:.5s">Коротке пояснення, як ці три ідеї разом розв'язують проблему.</p>
-    </div>
-    <div class="cards" style="--cols:3">
-      <article class="glass card rg" style="--d:.55s">
-        <div class="card-top"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg></span><span class="num mono">01</span></div>
-        <div><h3>Перша ідея</h3><p>Короткий опис у два рядки, щоб картка не була порожньою.</p></div>
-      </article>
-      <article class="glass card rg" style="--d:.65s">
-        <div class="card-top"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></span><span class="num mono">02</span></div>
-        <div><h3>Друга ідея</h3><p>Короткий опис у два рядки, щоб картка не була порожньою.</p></div>
-      </article>
-      <article class="glass card rg" style="--d:.75s">
-        <div class="card-top"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></span><span class="num mono">03</span></div>
-        <div><h3>Третя ідея</h3><p>Короткий опис у два рядки, щоб картка не була порожньою.</p></div>
-      </article>
-    </div>
-  </section>
-
-  <!-- 05 · Процес -->
-  <section class="slide s-steps" data-title="Як це працює" data-scene="bottom" data-theme="light">
-    <div class="head">
-      <div>
-        <span class="kicker r" style="--d:0s">04 — Процес</span>
-        <h2 class="h1"><span class="line split" style="--d:.08s">Як це <em>працює</em></span></h2>
-      </div>
-    </div>
-    <div class="timeline">
-      <i class="tl-line"></i>
-      <div class="tl-steps">
-        <div class="tl-step r" style="--d:.5s"><i class="node"></i><span class="num mono">Крок 1</span><h3>Назва кроку</h3><p>Що відбувається на цьому етапі.</p></div>
-        <div class="tl-step r" style="--d:.65s"><i class="node"></i><span class="num mono">Крок 2</span><h3>Назва кроку</h3><p>Що відбувається на цьому етапі.</p></div>
-        <div class="tl-step r" style="--d:.8s"><i class="node"></i><span class="num mono">Крок 3</span><h3>Назва кроку</h3><p>Що відбувається на цьому етапі.</p></div>
-        <div class="tl-step r" style="--d:.95s"><i class="node"></i><span class="num mono">Крок 4</span><h3>Результат</h3><p>Що отримуємо на виході.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 06 · Цифри -->
-  <section class="slide s-stat" data-title="Цифри" data-scene="center" data-theme="light">
-    <span class="kicker r" style="--d:0s">05 — Цифри</span>
-    <div class="stat-hero glass rg" style="--d:.2s" data-chroma data-blur="14">
-      <div class="big"><span class="split" style="--d:.5s">87</span><em>%</em></div>
-      <p class="r" style="--d:1.1s">Підпис до головної цифри — звідки вона і чому важлива.</p>
-    </div>
-    <div class="stat-row">
-      <div class="stat r" style="--d:1.2s"><b data-count="24">0</b><span>місяці роботи</span></div>
-      <div class="stat r" style="--d:1.3s"><b data-count="1200">0</b><span>користувачів</span></div>
-      <div class="stat r" style="--d:1.4s"><b>×<i data-count="3">0</i></b><span>швидше за аналоги</span></div>
-    </div>
-  </section>
-
-  <!-- 07 · Продукт -->
-  <section class="slide s-split rev" data-title="Продукт" data-scene="left" data-theme="light">
-    <div class="col visual px" data-depth="-14">
-      <div class="tilt">
-        <figure class="glass window rg" style="--d:.4s" data-chroma>
-          <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="url mono">app.example.com</span></div>
-          <div class="screen">
-            <div class="ui-row"><i style="width:34%"></i><i style="width:12%;margin-left:auto"></i></div>
-            <div class="ui-grid"><i></i><i></i><i></i></div>
-            <div class="ui-row"><i style="width:58%"></i></div>
-            <div class="ui-row"><i style="width:42%"></i><i style="width:20%"></i></div>
-            <span class="media-label mono">Скріншот або відео</span>
-          </div>
-        </figure>
-      </div>
-    </div>
-    <div class="col text">
-      <span class="kicker r" style="--d:0s">06 — Продукт</span>
-      <h2 class="h1"><span class="line split" style="--d:.08s">Як він</span><span class="line split" style="--d:.28s"><em>виглядає</em></span></h2>
-      <p class="lead r" style="--d:.7s">Опис продукту або головного екрана. Вікно ліворуч можна замінити на скріншот чи відео.</p>
-      <div class="chips">
-        <span class="chip r" style="--d:.95s">Швидко</span><span class="chip r" style="--d:1.02s">Зрозуміло</span><span class="chip r" style="--d:1.09s">Без зайвого</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- 08 · Можливості -->
-  <section class="slide s-cards" data-title="Можливості" data-scene="drops" data-theme="light">
-    <div class="head">
-      <div>
-        <span class="kicker r" style="--d:0s">07 — Можливості</span>
-        <h2 class="h1"><span class="line split" style="--d:.08s">Що він <em>уміє</em></span></h2>
-      </div>
-    </div>
-    <div class="cards" style="--cols:4">
-      <article class="glass card sm rg" style="--d:.5s"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M4 4h16v4H4zm0 6h10v10H4zm12 0h4v10h-4z"/></svg></span><div><h3>Функція</h3><p>Один рядок опису.</p></div></article>
-      <article class="glass card sm rg" style="--d:.58s"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8v6h-2V10.8l-6 6-4-4-4.6 4.6z"/></svg></span><div><h3>Функція</h3><p>Один рядок опису.</p></div></article>
-      <article class="glass card sm rg" style="--d:.66s"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5v5.6l4 2.4-1 1.6-5-3V7z"/></svg></span><div><h3>Функція</h3><p>Один рядок опису.</p></div></article>
-      <article class="glass card sm rg" style="--d:.74s"><span class="glyph"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zm-9 9l9 5 9-5v3l-9 5-9-5z"/></svg></span><div><h3>Функція</h3><p>Один рядок опису.</p></div></article>
-    </div>
-  </section>
-
-  <!-- 09 · Розділ (інверсія) -->
-  <section class="slide s-section" data-title="Розділ 02" data-scene="float" data-theme="orange">
-    <div class="roman px" data-depth="-28"><span class="r" style="--d:.1s">II</span></div>
-    <div class="center-stack">
-      <span class="kicker r" style="--d:0s">Розділ 02</span>
-      <h1 class="display">
-        <span class="line split" style="--d:.1s">Другий</span>
-        <span class="line split" style="--d:.34s"><em>розділ</em></span>
-      </h1>
-      <p class="lead r" style="--d:.9s">На оранжевих слайдах фон і краплі міняються місцями — так презентація дихає між частинами.</p>
-    </div>
-  </section>
-
-  <!-- 10 · Технології -->
-  <section class="slide s-split" data-title="Технології" data-scene="right" data-theme="light">
-    <div class="col text">
-      <span class="kicker r" style="--d:0s">08 — Технології</span>
-      <h2 class="h1"><span class="line split" style="--d:.08s">Що під</span><span class="line split" style="--d:.28s"><em>капотом</em></span></h2>
-      <p class="lead r" style="--d:.7s">Стек, інтеграції, інфраструктура — коротко й зрозуміло.</p>
-      <div class="chips">
-        <span class="chip r" style="--d:.95s">WebGL</span><span class="chip r" style="--d:1.0s">TypeScript</span><span class="chip r" style="--d:1.05s">PostgreSQL</span><span class="chip r" style="--d:1.1s">Docker</span><span class="chip r" style="--d:1.15s">CI/CD</span>
-      </div>
-    </div>
-    <div class="col visual px" data-depth="-14">
-      <figure class="glass media rg" style="--d:.45s" data-chroma>
-        <div class="diagram">
-          <i class="d-node" style="--x:18%;--y:28%"></i><i class="d-node" style="--x:50%;--y:18%"></i><i class="d-node big" style="--x:50%;--y:56%"></i><i class="d-node" style="--x:82%;--y:30%"></i><i class="d-node" style="--x:30%;--y:80%"></i><i class="d-node" style="--x:74%;--y:78%"></i>
-          <svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M18 28 L50 56 L50 18 M50 56 L82 30 M50 56 L30 80 M50 56 L74 78"/></svg>
+    <div class="jwt-right px" data-depth="-12">
+      <div class="glass jwt-card rg" style="--d:.4s" data-chroma data-blur="14">
+        <div class="jwt-token mono">
+          <span class="tk h">eyJraWQiOi…In0</span><span class="dot-sep">.</span><span class="tk p">eyJpc3MiOi…In0</span><span class="dot-sep">.</span><span class="tk s">Nu8m1…q4Xg</span>
         </div>
-        <span class="media-label mono">Схема або логотипи</span>
+        <div class="jwt-rows">
+          <div class="jwt-row"><span class="tag h mono">Header</span><code>&#123; "alg": "RS256", "kid": "d7b6…" &#125;</code></div>
+          <div class="jwt-row"><span class="tag p mono">Payload</span><code>&#123; "iss": "portswigger", "sub": "wiener" &#125;</code></div>
+          <div class="jwt-row"><span class="tag s mono">Signature</span><code>RSASHA256( header · payload, key )</code></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="slide s-divider" data-title="Завдання 1" data-theme="orange">
+    <div class="roman px" data-depth="-28"><span class="r" style="--d:.1s">I</span></div>
+    <span class="kicker kick r" style="--d:0s">Завдання 01 · PortSwigger</span>
+    <h2 class="h1 big"><span class="line split" style="--d:.1s">Обхід</span><em class="line split" style="--d:.34s">через неперевірений підпис</em></h2>
+    <p class="en-big mono r" style="--d:.7s">JWT authentication bypass via unverified signature</p>
+    <p class="goal r" style="--d:.85s">Сервер зовсім не перевіряє підпис токена. Декодуємо Payload, змінюємо поле <code>sub</code> на <code>administrator</code> і отримуємо доступ до панелі адміністратора.</p>
+    <div class="divider-foot r" style="--d:1s"><span class="keyline"><span class="kk mono">Ключ</span><code>&quot;sub&quot;:&quot;wiener&quot; → &quot;administrator&quot;</code></span></div>
+  </section>
+  <section class="slide s-evidence" data-title="Завдання 1 · розбір" data-theme="light">
+    <div class="ev-info">
+      <span class="kicker r" style="--d:0s">Завдання 01 · хід роботи</span>
+      <h2 class="h1 sm"><span class="line split" style="--d:.08s">Обхід через неперевірений підпис</span></h2>
+      <div class="stepbox">
+        <div class="step-meta mono"><span>Крок <b class="sn">01</b> / <b class="stot">06</b></span><span class="fig-lbl"></span></div>
+        <p class="step-text"></p>
+        <div class="segs"></div>
+      </div>
+      <a class="lab-link mono r" style="--d:.6s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-unverified-signature" target="_blank" rel="noopener">PortSwigger · JWT authentication bypass via unverified signature <span>↗</span></a>
+    </div>
+    <div class="ev-shot px" data-depth="-8">
+      <figure class="glass window shot rg" style="--d:.3s" tabindex="0" role="button" aria-label="Відкрити скріншот на весь екран">
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="url mono shot-url"></span><span class="figno mono"></span></div>
+        <div class="shot-img"><img alt=""></div>
+        <span class="zoom mono">⤢ Збільшити</span>
       </figure>
     </div>
+    <div class="steps-data" hidden>
+      <div data-fig="assets/fig-01.png" data-cap="Рис. 1 — Авторизувалися як wiener. У запиті GET /my-account сесія передається як JWT у cookie session." data-url="burp · proxy">Авторизувалися як <code>wiener</code>. У запиті <code>GET /my-account</code> сесія передається як JWT у cookie <code>session</code>.</div>
+      <div data-fig="assets/fig-02.png" data-cap="Рис. 2 — Передали запит у Repeater. JWT складається з трьох частин — Header.Payload.Signature; виділили другу, Payload." data-url="burp · repeater">Передали запит у Repeater. JWT складається з трьох частин — Header.Payload.Signature; виділили другу, Payload.</div>
+      <div data-fig="assets/fig-03.png" data-cap="Рис. 3 — У Decoder розкодували Payload з Base64, змінили sub на administrator і закодували назад." data-url="burp · decoder">У Decoder розкодували Payload з Base64, змінили sub на <code>administrator</code> і закодували назад.</div>
+      <div data-fig="assets/fig-04.png" data-cap="Рис. 4 — Підставили підроблений Payload у GET /admin. Підпис не перевіряється — сервер віддав 200 OK і адмінпанель." data-url="burp · repeater">Підставили підроблений Payload у <code>GET /admin</code>. Підпис не перевіряється — сервер віддав <code>200 OK</code> і адмінпанель.</div>
+      <div data-fig="assets/fig-05.png" data-cap="Рис. 5 — Сформували GET /admin/delete?username=carlos з тим самим токеном — сервер повернув 302 Found." data-url="burp · repeater">Сформували <code>GET /admin/delete?username=carlos</code> з тим самим токеном — сервер повернув <code>302 Found</code>.</div>
+      <div data-fig="assets/fig-06.png" data-cap="Рис. 6 — Користувача carlos видалено, лабораторну пройдено." data-url="portswigger">Користувача <code>carlos</code> видалено, лабораторну пройдено.</div>
+    </div>
   </section>
-
-  <!-- 11 · Порівняння -->
-  <section class="slide s-cards" data-title="Порівняння" data-scene="split" data-theme="light">
-    <div class="head">
-      <div>
-        <span class="kicker r" style="--d:0s">09 — Порівняння</span>
-        <h2 class="h1"><span class="line split" style="--d:.08s">Було і <em>стало</em></span></h2>
+  <section class="slide s-divider" data-title="Завдання 2" data-theme="orange">
+    <div class="roman px" data-depth="-28"><span class="r" style="--d:.1s">II</span></div>
+    <span class="kicker kick r" style="--d:0s">Завдання 02 · PortSwigger</span>
+    <h2 class="h1 big"><span class="line split" style="--d:.1s">Обхід</span><em class="line split" style="--d:.34s">через хибну перевірку підпису</em></h2>
+    <p class="en-big mono r" style="--d:.7s">JWT authentication bypass via flawed signature verification</p>
+    <p class="goal r" style="--d:.85s">Сервер приймає алгоритм <code>none</code> і перестає перевіряти підпис. Публічного ключа за <code>/jwks.json</code> немає (404), тож змінюємо <code>alg</code> на <code>none</code> і прибираємо підпис.</p>
+    <div class="divider-foot r" style="--d:1s"><span class="keyline"><span class="kk mono">Ключ</span><code>alg: RS256 → none</code></span></div>
+  </section>
+  <section class="slide s-evidence" data-title="Завдання 2 · розбір" data-theme="light">
+    <div class="ev-info">
+      <span class="kicker r" style="--d:0s">Завдання 02 · хід роботи</span>
+      <h2 class="h1 sm"><span class="line split" style="--d:.08s">Обхід через хибну перевірку підпису</span></h2>
+      <div class="stepbox">
+        <div class="step-meta mono"><span>Крок <b class="sn">01</b> / <b class="stot">08</b></span><span class="fig-lbl"></span></div>
+        <p class="step-text"></p>
+        <div class="segs"></div>
       </div>
+      <a class="lab-link mono r" style="--d:.6s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification" target="_blank" rel="noopener">PortSwigger · JWT authentication bypass via flawed signature verification <span>↗</span></a>
     </div>
-    <div class="cards compare" style="--cols:2">
-      <article class="glass card rg" style="--d:.5s">
-        <div class="card-top"><span class="num mono">Було</span></div>
-        <div><h3>Старий підхід</h3><p>Що було не так і скільки це коштувало. Два-три рядки, не більше.</p></div>
-        <div class="metric"><b>12 год</b><span>на один цикл</span></div>
-      </article>
-      <article class="card solid rg" style="--d:.62s">
-        <div class="card-top"><span class="num mono">Стало</span></div>
-        <div><h3>Новий підхід</h3><p>Що змінилося і який результат. Головну цифру — нижче, великим.</p></div>
-        <div class="metric"><b>40 хв</b><span>на один цикл</span></div>
-      </article>
+    <div class="ev-shot px" data-depth="-8">
+      <figure class="glass window shot rg" style="--d:.3s" tabindex="0" role="button" aria-label="Відкрити скріншот на весь екран">
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="url mono shot-url"></span><span class="figno mono"></span></div>
+        <div class="shot-img"><img alt=""></div>
+        <span class="zoom mono">⤢ Збільшити</span>
+      </figure>
+    </div>
+    <div class="steps-data" hidden>
+      <div data-fig="assets/fig-07.png" data-cap="Рис. 7 — Встановили розширення JWT Editor. Виділили першу частину токена — Header." data-url="burp · repeater">Встановили розширення JWT Editor. Виділили першу частину токена — Header.</div>
+      <div data-fig="assets/fig-08.png" data-cap="Рис. 8 — Decoder показав, що Header використовує асиметричний алгоритм RS256." data-url="burp · decoder">Decoder показав, що Header використовує асиметричний алгоритм <code>RS256</code>.</div>
+      <div data-fig="assets/fig-09.png" data-cap="Рис. 9 — У Decoder змінили в Payload sub на administrator і закодували назад у Base64url." data-url="burp · decoder">У Decoder змінили в Payload <code>sub</code> на <code>administrator</code> і закодували назад у Base64url.</div>
+      <div data-fig="assets/fig-10.png" data-cap="Рис. 10 — Зібрали фінальний токен [Header].[Payload]. з alg:none; підпис видалено, обов'язкову крапку лишено." data-url="burp · decoder">Зібрали фінальний токен <code>[Header].[Payload].</code> з <code>alg:none</code>; підпис видалено, обов'язкову крапку лишено.</div>
+      <div data-fig="assets/fig-11.png" data-cap="Рис. 11 — Надіслали токен без підпису на GET /admin — сервер прийняв його, 200 OK." data-url="burp · repeater">Надіслали токен без підпису на <code>GET /admin</code> — сервер прийняв його, <code>200 OK</code>.</div>
+      <div data-fig="assets/fig-12.png" data-cap="Рис. 12 — Сформували запит GET /admin/delete?username=carlos." data-url="burp · repeater">Сформували запит <code>GET /admin/delete?username=carlos</code>.</div>
+      <div data-fig="assets/fig-13.png" data-cap="Рис. 13 — Сервер повернув 302 Found — користувача видалено." data-url="burp · repeater">Сервер повернув <code>302 Found</code> — користувача видалено.</div>
+      <div data-fig="assets/fig-14.png" data-cap="Рис. 14 — Лабораторну пройдено." data-url="portswigger">Лабораторну пройдено.</div>
     </div>
   </section>
-
-  <!-- 12 · Команда -->
-  <section class="slide s-cards" data-title="Команда" data-scene="drops" data-theme="light">
-    <div class="head">
-      <div>
-        <span class="kicker r" style="--d:0s">10 — Команда</span>
-        <h2 class="h1"><span class="line split" style="--d:.08s">Хто це <em>робить</em></span></h2>
+  <section class="slide s-divider" data-title="Завдання 3" data-theme="orange">
+    <div class="roman px" data-depth="-28"><span class="r" style="--d:.1s">III</span></div>
+    <span class="kicker kick r" style="--d:0s">Завдання 03 · PortSwigger</span>
+    <h2 class="h1 big"><span class="line split" style="--d:.1s">Обхід</span><em class="line split" style="--d:.34s">через слабкий ключ підпису</em></h2>
+    <p class="en-big mono r" style="--d:.7s">JWT authentication bypass via weak signing key</p>
+    <p class="goal r" style="--d:.85s">Токен підписано симетрично (<code>HS256</code>) слабким ключем. Утилітою <code>hashcat</code> зі словником <code>jwt.secrets.list</code> офлайн підібрали секрет <code>secret1</code> і підписали власний токен.</p>
+    <div class="divider-foot r" style="--d:1s"><span class="keyline"><span class="kk mono">Ключ</span><code>hashcat → secret1</code></span></div>
+  </section>
+  <section class="slide s-evidence" data-title="Завдання 3 · розбір" data-theme="light">
+    <div class="ev-info">
+      <span class="kicker r" style="--d:0s">Завдання 03 · хід роботи</span>
+      <h2 class="h1 sm"><span class="line split" style="--d:.08s">Обхід через слабкий ключ підпису</span></h2>
+      <div class="stepbox">
+        <div class="step-meta mono"><span>Крок <b class="sn">01</b> / <b class="stot">07</b></span><span class="fig-lbl"></span></div>
+        <p class="step-text"></p>
+        <div class="segs"></div>
       </div>
+      <a class="lab-link mono r" style="--d:.6s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-weak-signing-key" target="_blank" rel="noopener">PortSwigger · JWT authentication bypass via weak signing key <span>↗</span></a>
     </div>
-    <div class="cards team" style="--cols:4">
-      <article class="glass card sm rg" style="--d:.5s"><span class="avatar">АК</span><div><h3>Ім'я Прізвище</h3><p>Роль у команді</p></div></article>
-      <article class="glass card sm rg" style="--d:.58s"><span class="avatar">ОМ</span><div><h3>Ім'я Прізвище</h3><p>Роль у команді</p></div></article>
-      <article class="glass card sm rg" style="--d:.66s"><span class="avatar">ІВ</span><div><h3>Ім'я Прізвище</h3><p>Роль у команді</p></div></article>
-      <article class="glass card sm rg" style="--d:.74s"><span class="avatar">НС</span><div><h3>Ім'я Прізвище</h3><p>Роль у команді</p></div></article>
+    <div class="ev-shot px" data-depth="-8">
+      <figure class="glass window shot rg" style="--d:.3s" tabindex="0" role="button" aria-label="Відкрити скріншот на весь екран">
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="url mono shot-url"></span><span class="figno mono"></span></div>
+        <div class="shot-img"><img alt=""></div>
+        <span class="zoom mono">⤢ Збільшити</span>
+      </figure>
+    </div>
+    <div class="steps-data" hidden>
+      <div data-fig="assets/fig-15.png" data-cap="Рис. 15 — Підібраний ключ secret1 закодували у Base64 — c2VjcmV0MQ==." data-url="base64">Підібраний ключ <code>secret1</code> закодували у Base64 — <code>c2VjcmV0MQ==</code>.</div>
+      <div data-fig="assets/fig-16.png" data-cap="Рис. 16 — У JWT Editor Keys створили симетричний ключ у форматі JWK зі значенням секрету в полі k." data-url="jwt editor">У JWT Editor Keys створили симетричний ключ у форматі JWK зі значенням секрету в полі <code>k</code>.</div>
+      <div data-fig="assets/fig-17.png" data-cap="Рис. 17 — У Payload змінили sub з wiener на administrator." data-url="burp · repeater">У Payload змінили <code>sub</code> з <code>wiener</code> на <code>administrator</code>.</div>
+      <div data-fig="assets/fig-18.png" data-cap="Рис. 18 — Підписали токен створеним ключем, зберігши оригінальний заголовок (Don't modify header)." data-url="jwt editor">Підписали токен створеним ключем, зберігши оригінальний заголовок (Don't modify header).</div>
+      <div data-fig="assets/fig-19.png" data-cap="Рис. 19 — Сервер перевірив підпис і віддав 200 OK — доступ до адмінпанелі." data-url="burp · repeater">Сервер перевірив підпис і віддав <code>200 OK</code> — доступ до адмінпанелі.</div>
+      <div data-fig="assets/fig-20.png" data-cap="Рис. 20 — Надіслали GET /admin/delete?username=carlos підписаним токеном." data-url="burp · repeater">Надіслали <code>GET /admin/delete?username=carlos</code> підписаним токеном.</div>
+      <div data-fig="assets/fig-21.png" data-cap="Рис. 21 — Користувача видалено, лабораторну пройдено." data-url="portswigger">Користувача видалено, лабораторну пройдено.</div>
     </div>
   </section>
-
-  <!-- 13 · Дорожня карта -->
-  <section class="slide s-steps" data-title="Дорожня карта" data-scene="bottom" data-theme="light">
-    <div class="head">
-      <div>
-        <span class="kicker r" style="--d:0s">11 — Дорожня карта</span>
-        <h2 class="h1"><span class="line split" style="--d:.08s">Що <em>далі</em></span></h2>
+  <section class="slide s-divider" data-title="Завдання 4" data-theme="orange">
+    <div class="roman px" data-depth="-28"><span class="r" style="--d:.1s">IV</span></div>
+    <span class="kicker kick r" style="--d:0s">Завдання 04 · PortSwigger</span>
+    <h2 class="h1 big"><span class="line split" style="--d:.1s">Обхід</span><em class="line split" style="--d:.34s">через ін&#x27;єкцію заголовка jwk</em></h2>
+    <p class="en-big mono r" style="--d:.7s">JWT authentication bypass via jwk header injection</p>
+    <p class="goal r" style="--d:.85s">Сервер бере публічний ключ прямо із заголовка <code>jwk</code> без перевірки за білим списком. Генеруємо власну пару RSA, вбудовуємо свій ключ у токен і підписуємо його своїм приватним ключем.</p>
+    <div class="divider-foot r" style="--d:1s"><span class="keyline"><span class="kk mono">Ключ</span><code>Embedded JWK у заголовку</code></span></div>
+  </section>
+  <section class="slide s-evidence" data-title="Завдання 4 · розбір" data-theme="light">
+    <div class="ev-info">
+      <span class="kicker r" style="--d:0s">Завдання 04 · хід роботи</span>
+      <h2 class="h1 sm"><span class="line split" style="--d:.08s">Обхід через ін&#x27;єкцію заголовка jwk</span></h2>
+      <div class="stepbox">
+        <div class="step-meta mono"><span>Крок <b class="sn">01</b> / <b class="stot">07</b></span><span class="fig-lbl"></span></div>
+        <p class="step-text"></p>
+        <div class="segs"></div>
       </div>
+      <a class="lab-link mono r" style="--d:.6s" href="https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jwk-header-injection" target="_blank" rel="noopener">PortSwigger · JWT authentication bypass via jwk header injection <span>↗</span></a>
     </div>
-    <div class="timeline">
-      <i class="tl-line"></i>
-      <div class="tl-steps">
-        <div class="tl-step done r" style="--d:.5s"><i class="node"></i><span class="num mono">Q1</span><h3>Етап</h3><p>Що вже зроблено.</p></div>
-        <div class="tl-step now r" style="--d:.65s"><i class="node"></i><span class="num mono">Q2</span><h3>Етап</h3><p>Де ми зараз.</p></div>
-        <div class="tl-step r" style="--d:.8s"><i class="node"></i><span class="num mono">Q3</span><h3>Етап</h3><p>Що буде зроблено.</p></div>
-        <div class="tl-step r" style="--d:.95s"><i class="node"></i><span class="num mono">Q4</span><h3>Етап</h3><p>Що буде зроблено.</p></div>
-      </div>
+    <div class="ev-shot px" data-depth="-8">
+      <figure class="glass window shot rg" style="--d:.3s" tabindex="0" role="button" aria-label="Відкрити скріншот на весь екран">
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="url mono shot-url"></span><span class="figno mono"></span></div>
+        <div class="shot-img"><img alt=""></div>
+        <span class="zoom mono">⤢ Збільшити</span>
+      </figure>
+    </div>
+    <div class="steps-data" hidden>
+      <div data-fig="assets/fig-22.png" data-cap="Рис. 22 — Увійшли як wiener; у Repeater змінили шлях на GET /admin." data-url="burp · repeater">Увійшли як <code>wiener</code>; у Repeater змінили шлях на <code>GET /admin</code>.</div>
+      <div data-fig="assets/fig-23.png" data-cap="Рис. 23 — У JWT Editor згенерували нову пару ключів RSA 2048 у форматі JWK." data-url="jwt editor">У JWT Editor згенерували нову пару ключів RSA 2048 у форматі JWK.</div>
+      <div data-fig="assets/fig-24.png" data-cap="Рис. 24 — У вікні Embedded JWK вибрали згенерований ключ і алгоритм RS256." data-url="jwt editor">У вікні Embedded JWK вибрали згенерований ключ і алгоритм <code>RS256</code>.</div>
+      <div data-fig="assets/fig-25.png" data-cap="Рис. 25 — Змінили sub на administrator; у заголовок вбудовано jwk (kty, e, kid, n), токен перепідписано приватним ключем." data-url="jwt editor">Змінили <code>sub</code> на <code>administrator</code>; у заголовок вбудовано <code>jwk</code> (kty, e, kid, n), токен перепідписано приватним ключем.</div>
+      <div data-fig="assets/fig-26.png" data-cap="Рис. 26 — Сервер прийняв підпис за вбудованим ключем — 200 OK." data-url="burp · repeater">Сервер прийняв підпис за вбудованим ключем — <code>200 OK</code>.</div>
+      <div data-fig="assets/fig-27.png" data-cap="Рис. 27 — Надіслали GET /admin/delete?username=carlos — 302 Found." data-url="burp · repeater">Надіслали <code>GET /admin/delete?username=carlos</code> — <code>302 Found</code>.</div>
+      <div data-fig="assets/fig-28.png" data-cap="Рис. 28 — Банер «Congratulations, you solved the lab!» — завдання виконано." data-url="portswigger">Банер «Congratulations, you solved the lab!» — завдання виконано.</div>
     </div>
   </section>
-
-  <!-- 14 · Цитата -->
-  <section class="slide s-quote" data-title="Цитата" data-scene="quote" data-theme="light">
-    <span class="qmark r" style="--d:0s" aria-hidden="true">“</span>
-    <blockquote class="quote">
-      <span class="split" data-by="word" style="--d:.15s">Місце для цитати, яка підсумовує головну думку презентації — одним реченням.</span>
-    </blockquote>
-    <div class="author r" style="--d:1.1s"><i class="dash"></i><b>Ім'я автора</b><span class="muted">посада, компанія</span></div>
+  <section class="slide s-concl" data-title="Висновки" data-theme="light">
+    <div class="head"><div>
+      <span class="kicker r" style="--d:0s">Висновки</span>
+      <h2 class="h1"><span class="line split" style="--d:.08s">Чому це <em>спрацювало</em></span></h2>
+    </div><p class="lead small r" style="--d:.5s">Безпека JWT залежить не від стійкості алгоритму, а від правильної перевірки на сервері.</p></div>
+    <div class="cards4"><div class="c4 r" style="--d:1.0s"><span class="k mono">01</span><i class="ln"></i><h3>Ігнорування підпису</h3><p>Сервер приймав токен, навіть не перевіряючи його криптографічний підпис.</p></div>
+<div class="c4 r" style="--d:1.1s"><span class="k mono">02</span><i class="ln"></i><h3>Хибна обробка alg</h3><p>Логіка підпису дозволяла перемкнути алгоритм на <code>none</code> й вимкнути перевірку.</p></div>
+<div class="c4 r" style="--d:1.2s"><span class="k mono">03</span><i class="ln"></i><h3>Слабкі ключі</h3><p>Короткий секрет для <code>HS256</code> підбирається офлайн за секунди за словником.</p></div>
+<div class="c4 r" style="--d:1.3s"><span class="k mono">04</span><i class="ln"></i><h3>Довіра до jwk</h3><p>Ключ із заголовка <code>jwk</code> приймався без білого списку довірених.</p></div></div>
   </section>
-
-  <!-- 15 · Дякую (інверсія) -->
-  <section class="slide s-thanks" data-title="Дякую" data-scene="hero" data-theme="orange">
+  <section class="slide s-cards" data-title="Рекомендації" data-theme="light">
+    <div class="head"><div>
+      <span class="kicker r" style="--d:0s">Рекомендації · Remediation</span>
+      <h2 class="h1"><span class="line split" style="--d:.08s">Як <em>захиститися</em></span></h2>
+    </div></div>
+    <div class="cards" style="--cols:4"><article class="glass card sm rg" style="--d:0.5s"><div class="card-top"><span class="glyph sm"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></span><span class="num mono">01</span></div><div><h3>Завжди перевіряти підпис</h3><p>Не допускати вимкнення перевірки підпису на сервері за жодних умов.</p></div></article>
+<article class="glass card sm rg" style="--d:0.58s"><div class="card-top"><span class="glyph sm"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></span><span class="num mono">02</span></div><div><h3>Фіксувати алгоритм</h3><p>Жорстко задати допустимий <code>alg</code> у коді й ігнорувати його підміну клієнтом.</p></div></article>
+<article class="glass card sm rg" style="--d:0.66s"><div class="card-top"><span class="glyph sm"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></span><span class="num mono">03</span></div><div><h3>Надійні ключі</h3><p>Довгі випадкові секрети для симетричних схем і надійні пари для асиметричних.</p></div></article>
+<article class="glass card sm rg" style="--d:0.74s"><div class="card-top"><span class="glyph sm"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></span><span class="num mono">04</span></div><div><h3>Білий список ключів</h3><p>Заборонити <code>jwk</code>, <code>jku</code>, <code>x5u</code> з токена; звіряти з локальним сховищем.</p></div></article></div>
+  </section>
+  <section class="slide s-thanks" data-title="Дякую" data-theme="orange">
     <h1 class="display px" data-depth="12">
       <span class="line split" style="--d:.1s">Дякую</span>
       <span class="line split" style="--d:.4s"><em>за увагу.</em></span>
     </h1>
     <div class="links">
-      <a class="big-btn rg" style="--d:.95s" href="mailto:email@example.com">email@example.com <span class="arr">↗</span></a>
+      <a class="big-btn rg" style="--d:.95s" href="https://portswigger.net/web-security/jwt" target="_blank" rel="noopener">PortSwigger · JWT <span class="arr">↗</span></a>
       <button class="big-btn ghost rg" style="--d:1.05s" data-go="0">На початок <span class="arr">↺</span></button>
     </div>
-    <div class="sign r mono" style="--d:1.2s">Ім'я Прізвище · Назва компанії · 2026</div>
+    <div class="sign r mono" style="--d:1.2s">Дзяман Наталія · КБ-307 · НУ «Львівська політехніка» · 2026</div>
   </section>
-
 </main>
 
 <header class="chrome chrome--top">
   <button class="brand" data-go="0" aria-label="На початок">
-    <i class="brand-dot"></i><span class="brand-t">Назва проєкту</span>
+    <i class="brand-dot"></i><span class="brand-t">ЛР № 7 · JWT</span>
   </button>
   <div class="now-label mono" aria-hidden="true"><span class="swap" id="nowLabel"></span></div>
   <button class="round-btn glass" id="menuBtn" aria-label="Зміст" data-blur="8" data-refract="8">
@@ -312,8 +282,8 @@
   <div class="counter mono"><span class="roll" id="cnt">01</span><span class="of">/ <b id="tot">00</b></span></div>
   <div class="ticks" id="ticks" aria-hidden="true"></div>
   <div class="ctrl glass pill" data-blur="8" data-refract="8">
-    <button id="prevBtn" aria-label="Попередній слайд"><svg viewBox="0 0 20 20"><path d="M5 12l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <button id="nextBtn" aria-label="Наступний слайд"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button id="prevBtn" aria-label="Попередній крок"><svg viewBox="0 0 20 20"><path d="M5 12l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button id="nextBtn" aria-label="Наступний крок"><svg viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <i class="vsep"></i>
     <button id="fsBtn" aria-label="На весь екран"><svg viewBox="0 0 20 20"><path d="M4 8V4h4M16 8V4h-4M4 12v4h4M16 12v4h-4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
@@ -330,6 +300,12 @@
 </div>
 </div>
 
+<div class="lightbox" id="lb" role="dialog" aria-modal="true" aria-label="Скріншот" hidden>
+  <img id="lbImg" alt="">
+  <div class="lb-cap mono" id="lbCap"></div>
+  <button class="round-btn lb-close" id="lbClose" aria-label="Закрити"><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg></button>
+</div>
+
 <div class="pre" id="pre" aria-hidden="true">
   <div class="pre-in">
     <i class="pre-dot"></i>
@@ -341,8 +317,8 @@
 
 <noscript><p style="padding:40px;color:#1a1410;position:relative">Для перегляду презентації увімкніть JavaScript.</p></noscript>
 
-<script src="js/background.js?v=10"></script>
-<script src="js/glass.js?v=10"></script>
-<script src="js/deck.js?v=10"></script>
+<script src="js/background.js?v=12"></script>
+<script src="js/glass.js?v=11"></script>
+<script src="js/deck.js?v=11"></script>
 </body>
 </html>

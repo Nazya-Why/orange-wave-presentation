@@ -437,11 +437,12 @@ kbd { font: inherit; padding: 3px 9px; border: 1px solid var(--line); border-rad
 @keyframes roll { 0% { transform: translateY(14px); opacity: 0; } 100% { transform: none; opacity: 1; } }
 
 .ticks { display: flex; gap: 6px; align-items: center; }
-.ticks button { width: 24px; height: 20px; padding: 0; display: grid; place-items: center; }
-.ticks button::before { content: ''; width: 100%; height: 3px; border-radius: 2px; background: var(--ink); opacity: .14; transition: all .5s var(--ease); }
+.ticks button { width: 22px; height: 20px; padding: 0; display: grid; place-items: center; transition: width .5s var(--ease); }
+.ticks button.on { width: 36px; }
+.ticks button::before { content: ''; width: 100%; height: 3px; border-radius: 2px; background: var(--ink); opacity: .14; transition: background .5s var(--ease), opacity .5s var(--ease), height .5s var(--ease); }
 .ticks button:hover::before { opacity: .45; }
 .ticks button.seen::before { opacity: .32; }
-.ticks button.on::before { background: var(--tick-on); opacity: 1; height: 4px; width: 36px; }
+.ticks button.on::before { background: var(--tick-on); opacity: 1; height: 4px; }
 
 .ctrl { display: flex; align-items: center; padding: 5px; gap: 2px; }
 .ctrl button {
