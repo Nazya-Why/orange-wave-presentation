@@ -67,7 +67,6 @@
       nx.className = 'show';
       if (shown) shown.className = dir < 0 ? 'to-b' : 'to-f';
       box._cur = nx;
-      if (dir) { box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash'); }
     };
     (nx.decode ? nx.decode() : Promise.resolve()).then(run, run);
   }
@@ -141,7 +140,7 @@
     $$('.segs button', el).forEach((b, j) => { b.classList.toggle('on', j === k); b.classList.toggle('done', j < k); });
 
     const txt = $('.step-text', el);
-    txt.style.transition = 'none'; txt.style.opacity = '0'; txt.style.transform = 'translateY(12px)';
+    txt.style.transition = 'none'; txt.style.opacity = '0'; txt.style.transform = `translateY(${dir < 0 ? -14 : 14}px)`;
     const show = () => { txt.innerHTML = st.html; void txt.offsetWidth; txt.style.transition = 'opacity .5s var(--ease), transform .6s var(--ease)'; txt.style.opacity = '1'; txt.style.transform = 'none'; };
     setTimeout(show, entering ? 240 : 150);
 
@@ -169,8 +168,6 @@
     const now = $('#nowLabel');
     now.classList.add('out');
     setTimeout(() => { now.textContent = `${pad(i + 1)} — ${slides[i].dataset.title}`; now.classList.remove('out'); }, 260);
-    $('#prevBtn').disabled = i === 0 && !(slides[i]._steps && (stepOf.get(i) ?? 0) > 0);
-    $('#nextBtn').disabled = i === N - 1 && !(slides[i]._steps && (stepOf.get(i) ?? 0) < slides[i]._steps.length - 1);
   }
 
   function runCounters(el) {
