@@ -44,7 +44,34 @@
     steps.forEach(s => allFigs.push(s.fig));
     const segs = $('.segs', el);
     if (segs) segs.innerHTML = steps.map((_, k) => `<button data-step="${k}" aria-label="Крок ${k + 1}"></button>`).join('');
+    // другий кадр для плавної зміни скріншотів
+    const box = $('.shot-img', el);
+    if (box && $$('img', box).length < 2) box.appendChild($('img', box).cloneNode());
+    $$('.sn, .figno', el).forEach(n => n.classList.add('roll'));
   });
+
+  /* ───────── плавна зміна скріншота: dir 1 — вперед, -1 — назад, 0 — вхід на слайд ───────── */
+  function swapShot(el, src, cap, dir) {
+    const box = $('.shot-img', el);
+    const [a, b] = $$('img', box);
+    const shown = box._cur;
+    if (shown && shown.getAttribute('src') === src) return;
+    const nx = shown === a ? b : a;
+    const tok = box._tok = (box._tok || 0) + 1;
+    nx.className = dir > 0 ? 'from-f' : dir < 0 ? 'from-b' : 'from-up';
+    nx.alt = cap;
+    nx.src = src;
+    const run = () => {
+      if (box._tok !== tok) return;
+      void nx.offsetWidth;
+      nx.className = 'show';
+      if (shown) shown.className = dir < 0 ? 'to-b' : 'to-f';
+      box._cur = nx;
+      if (dir) { box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash'); }
+    };
+    (nx.decode ? nx.decode() : Promise.resolve()).then(run, run);
+  }
+  const tick = n => { n.classList.remove('tick'); void n.offsetWidth; n.classList.add('tick'); };
 
   /* ───────── рамка ───────── */
   $('#tot').textContent = pad(N);
@@ -101,12 +128,15 @@
   function setStep(i, k, entering = false) {
     const el = slides[i], steps = el._steps;
     k = Math.max(0, Math.min(steps.length - 1, k));
-    if (stepOf.get(i) === k && !entering) return;
+    const prevK = stepOf.get(i);
+    if (prevK === k && !entering) return;
+    const dir = entering || prevK == null ? 0 : (k > prevK ? 1 : -1);
     stepOf.set(i, k);
     const st = steps[k];
     $('.sn', el).textContent = pad(k + 1);
     $('.fig-lbl', el).textContent = st.cap.split(' — ')[0];
     $('.figno', el).textContent = st.cap.split(' — ')[0];
+    if (dir) { tick($('.sn', el)); tick($('.figno', el)); }
     const su = $('.shot-url', el); if (su) su.textContent = st.url;
     $$('.segs button', el).forEach((b, j) => { b.classList.toggle('on', j === k); b.classList.toggle('done', j < k); });
 
@@ -115,13 +145,8 @@
     const show = () => { txt.innerHTML = st.html; void txt.offsetWidth; txt.style.transition = 'opacity .5s var(--ease), transform .6s var(--ease)'; txt.style.opacity = '1'; txt.style.transform = 'none'; };
     setTimeout(show, entering ? 240 : 150);
 
-    const img = $('.shot-img img', el);
     el._shot = { src: st.fig, cap: st.cap };
-    if (img.getAttribute('src') !== st.fig) {
-      img.classList.remove('in');
-      img.onload = () => { if (stepOf.get(i) === k) img.classList.add('in'); };
-      img.alt = st.cap; img.src = st.fig;
-    } else img.classList.add('in');
+    swapShot(el, st.fig, st.cap, dir);
     // підвантажити сусідні
     [k + 1, k + 2].forEach(j => { if (steps[j]) { const im = new Image(); im.src = steps[j].fig; } });
     if (cur === i) syncHash();

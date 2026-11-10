@@ -80,8 +80,28 @@
 .window.shot .url { font-size: 13px; color: var(--ink-3); letter-spacing: .04em; margin: 0 auto; }
 .window.shot .figno { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--o); }
 .shot-img { position: relative; height: 620px; background: #fff; display: grid; place-items: center; overflow: hidden; }
-.shot-img img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; opacity: 0; transition: opacity .45s var(--ease); }
-.shot-img img.in { opacity: 1; }
+/* два кадри накладаються: старий відпливає, новий припливає з протилежного боку */
+.shot-img img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block;
+  opacity: 0; transform: translate3d(0, 0, 0) scale(1); filter: blur(0);
+  transition: opacity .6s cubic-bezier(.4, 0, .2, 1), transform .9s var(--ease), filter .6s var(--ease);
+  will-change: transform, opacity, filter;
+}
+.shot-img img.show { opacity: 1; }
+.shot-img img.from-f  { opacity: 0; transform: translate3d(9%, 0, 0) scale(.96);  filter: blur(12px); transition: none; }
+.shot-img img.from-b  { opacity: 0; transform: translate3d(-9%, 0, 0) scale(.96); filter: blur(12px); transition: none; }
+.shot-img img.from-up { opacity: 0; transform: translate3d(0, 5%, 0) scale(.97);  filter: blur(10px); transition: none; }
+.shot-img img.to-f { opacity: 0; transform: translate3d(-9%, 0, 0) scale(.96); filter: blur(12px); transition-duration: .45s, .7s, .45s; }
+.shot-img img.to-b { opacity: 0; transform: translate3d(9%, 0, 0) scale(.96);  filter: blur(12px); transition-duration: .45s, .7s, .45s; }
+/* легкий відблиск, що пробігає по склу при зміні кадру */
+.shot-img::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, .55) 50%, transparent 65%);
+  transform: translateX(-110%);
+}
+.shot-img.flash::after { animation: sweep .9s var(--ease); }
+@keyframes sweep { to { transform: translateX(110%); } }
+.figno.roll, .sn.roll { display: inline-block; }
 .zoom { position: absolute; right: 22px; bottom: 20px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: rgba(26,20,16,.72); padding: 8px 14px; border-radius: 999px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 2; }
 .window.shot:hover .zoom { opacity: 1; }
 .steps-data { display: none; }
